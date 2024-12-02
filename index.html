@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кавайный Калькулятор</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Cat&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Comic Cat', cursive;
+        }
+
+        .calculator-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #BFECFF;
+            border-radius: 20px;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .cat-gif {
+            width: 100%;
+            height: 200px;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .cat-gif img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .display {
+            background-color: #FFF6E3;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: right;
+            font-size: 2em;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            background-color: #FFCCEA;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .operator {
+            background-color: #CDC1FF;
+        }
+
+        .special {
+            grid-column: span 2;
+        }
+
+        .footer {
+            text-align: center;
+            color: #FFCCEA;
+            font-size: 1.5em;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 400px) {
+            .calculator-container {
+                width: 100%;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="cat-gif">
+            <img src="https://media.giphy.com/media/JIz5CmeRKodNS/giphy.gif" alt="Cute Cat">
+        </div>
+        
+        <div class="display" id="display">0</div>
+        
+        <div class="buttons">
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="setOperator('/')">/</button>
+
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="operator" onclick="setOperator('*')">*</button>
+
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="operator" onclick="setOperator('-')">-</button>
+
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button onclick="calculatePercentage()">%</button>
+            <button class="operator" onclick="setOperator('+')">+</button>
+
+            <button class="special" onclick="clearDisplay()">Clear</button>
+            <button class="special" onclick="calculateResult()">=</button>
+        </div>
+        
+        <div class="footer">meeeeeowo</div>
+    </div>
+
+    <script>
+        let currentDisplay = '0';
+        let previousValue = null;
+        let operator = null;
+
+        function updateDisplay() {
+            document.getElementById('display').textContent = currentDisplay;
+        }
+
+        function appendToDisplay(value) {
+            if (currentDisplay === '0') {
+                currentDisplay = value;
+            } else {
+                currentDisplay += value;
+            }
+            updateDisplay();
+        }
+
+        function setOperator(op) {
+            if (previousValue === null) {
+                previousValue = parseFloat(currentDisplay);
+            } else {
+                calculateResult();
+                previousValue = parseFloat(currentDisplay);
+            }
+            operator = op;
+            currentDisplay = '0';
+            updateDisplay();
+        }
+
+        function calculateResult() {
+            const currentValue = parseFloat(currentDisplay);
+
+            switch(operator) {
+                case '+':
+                    currentDisplay = (previousValue + currentValue).toString();
+                    break;
+                case '-':
+                    currentDisplay = (previousValue - currentValue).toString();
+                    break;
+                case '*':
+                    currentDisplay = (previousValue * currentValue).toString();
+                    break;
+                case '/':
+                    currentDisplay = (previousValue / currentValue).toString();
+                    break;
+            }
+
+            previousValue = null;
+            operator = null;
+            updateDisplay();
+        }
+
+        function calculatePercentage() {
+            const currentValue = parseFloat(currentDisplay);
+            if (previousValue !== null) {
+                currentDisplay = ((previousValue / 100) * currentValue).toString();
+            } else {
+                currentDisplay = (currentValue / 100).toString();
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentDisplay = '0';
+            previousValue = null;
+            operator = null;
+            updateDisplay();
+        }
+
+        updateDisplay();
+    </script>
+</body>
+</html>
